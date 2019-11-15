@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Terminal=false
+Type=Application
+Name=Bolls
+Exec=/home/b/Bolls-0.1.0.AppImage
+Icon=/home/b/icon.png
+Categories=Educatuion

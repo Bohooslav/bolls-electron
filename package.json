@@ -1,0 +1,26 @@
+{
+  "name": "Bolls",
+  "version": "0.1.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^7.1.1",
+    "electron-builder": "^22.1.0"
+  },
+  "build": {
+    "appId": "www.bolls.life",
+    "mac": {
+      "category": "Education"
+    },
+    "linux": {
+      "category": "Education"
+    },
+    "icon": "./build/icon.png"
+  },
+  "author": "Boguslav Pavlyshinets",
+  "description": "Read the Bible with full emphasis on the God`s Word only. Sola scriptura. Read God`s Word with a deep understanding of His design. Bible elevates your soul with rapid ascending to calm, safety and more."
+}

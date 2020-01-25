@@ -13,3 +13,9 @@ npm install
 npm run watch
 npm run start
 ```
+
+### Build
+
+```
+npm run dist
+```

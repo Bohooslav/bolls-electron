@@ -6,18 +6,11 @@ function createWindow () {
     show: false,
     backgroundColor: '#04060c',
     icon: 'build/icon.png',
-    frame: false,
     webPreferences: { nodeIntegration: true },
 
   })
   win.maximize()
-  win.setFullScreen(true)
-  console.log(win.FullScreen)
-  if (win.FullScreen) {
-    win.frame = false;
-  } else {
-    win.frame = true;
-  }
+
   // if (app.isPackaged || process.env.PRODUCTION) {
   //   // and load the index.html of the app.
   //   win.loadFile("dist/index.html")

@@ -23,6 +23,7 @@ function createWindow () {
   win.once('ready-to-show', () => {
     win.show()
   })
+  win.setMenuBarVisibility(false)
 }
 
 app.on("ready", createWindow)

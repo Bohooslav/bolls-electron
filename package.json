@@ -1,12 +1,17 @@
 {
-  "name": "bolls",
-  "version": "0.1.1",
+  "name": "bollsbible",
+  "version": "0.1.0",
   "main": "main.js",
+  "license": "MIT",
+  "keywords": [
+    "Bible"
+  ],
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
+  "dependencies": {},
   "devDependencies": {
     "electron": "^7.1.10",
     "electron-builder": "^22.3.2"
@@ -19,8 +24,22 @@
     "linux": {
       "category": "Education"
     },
+    "win": {
+      "target": [
+        "appx"
+      ],
+      "icon": "./build/icon.png"
+    },
+    "appx": {
+      "displayName": "Bolls Bible",
+      "publisherDisplayName": "Bohooslav",
+      "backgroundColor": "#04060C",
+      "identityName": "33943CA21EBD1.BollsBible",
+      "applicationId": "BollsBible",
+      "publisher": "CN=B97D0445-D287-4CDD-84F4-543D4B5E1762"
+    },
     "icon": "./build/icon.png"
   },
-  "author": "Богуслав Павлишинець",
+  "author": "Bohooslav <bpavlisinec@gmail.com>",
   "description": "Read the Bible with full emphasis on the God`s Word only. Sola scriptura. Read God`s Word with a deep understanding of His design. Bible elevates your soul with rapid ascending to calm, safety and more."
 }

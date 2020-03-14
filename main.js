@@ -18,7 +18,7 @@ function createWindow () {
   //   // webpack-dev-server defaults to port 8080
   //   const port = process.env.PORT || 8080;
   //   // win.loadURL(`http://localhost:${port}`)
-  win.loadURL('https://bolls-256717.appspot.com')
+  win.loadURL('https://bolls.life')
   // }
   win.once('ready-to-show', () => {
     win.show()

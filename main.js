@@ -6,24 +6,18 @@ function createWindow () {
     show: false,
     backgroundColor: '#04060c',
     icon: 'build/icon.png',
-    webPreferences: { nodeIntegration: true },
-
+    webPreferences: {
+      sandbox: true,
+      defaultFontFamily: 'sansSerif',
+    },
+    darkTheme: true,
   })
-  win.maximize()
-
-  // if (app.isPackaged || process.env.PRODUCTION) {
-  //   // and load the index.html of the app.
-  //   win.loadFile("dist/index.html")
-  // } else {
-  //   // webpack-dev-server defaults to port 8080
-  //   const port = process.env.PORT || 8080;
-  //   // win.loadURL(`http://localhost:${port}`)
   win.loadURL('https://bolls.life')
-  // }
+  win.maximize()
+  win.setMenuBarVisibility(false)
   win.once('ready-to-show', () => {
     win.show()
   })
-  win.setMenuBarVisibility(false)
 }
 
 app.on("ready", createWindow)

@@ -19,7 +19,7 @@
   "build": {
     "appId": "bolls.life",
     "mac": {
-      "category": "Education"
+      "category": "public.app-category.education"
     },
     "linux": {
       "category": "Education"

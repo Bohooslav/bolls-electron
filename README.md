@@ -7,6 +7,12 @@
 npm install
 ```
 
+
+### Develop
+
+```
+npm run start
+```
 ### Build
 
 ```

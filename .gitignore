@@ -102,10 +102,6 @@ public
 ########### MY ###########
 dist/
 node_modules/
-
-
-
-##### My adds
 .mypy_cache/
 .flatpak-builder/
 _build/

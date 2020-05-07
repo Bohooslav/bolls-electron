@@ -18,6 +18,10 @@ function createWindow () {
   win.once('ready-to-show', () => {
     win.show()
   })
+  win.webContents.on('new-window', function(e, url) {
+    e.preventDefault()
+    require('electron').shell.openExternal(url)
+  })
 }
 
 app.on("ready", createWindow)

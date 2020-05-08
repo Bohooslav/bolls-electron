@@ -1,10 +1,10 @@
 {
-  "name": "bollsbible",
-  "version": "0.1.4",
+  "name": "bolls",
+  "version": "0.1.5",
   "main": "main.js",
   "license": "MIT",
   "keywords": [
-    "Bible"
+    "Bible", "bolls"
   ],
   "scripts": {
     "start": "electron .",
@@ -16,6 +16,7 @@
     "electron": "^8.0.3",
     "electron-builder": "^22.3.6"
   },
+  "files": ["**/*", "build/icon.*"],
   "build": {
     "appId": "bolls.life",
     "mac": {
@@ -38,6 +39,10 @@
       "identityName": "33943CA21EBD1.BollsBible",
       "applicationId": "BollsBible",
       "publisher": "CN=B97D0445-D287-4CDD-84F4-543D4B5E1762"
+    },
+    "appImage": {
+      "synopsis": "Read the Bible with full emphasis on the God`s Word only. Sola scriptura.",
+      "category": "Education"
     },
     "icon": "./build/icon.png"
   },

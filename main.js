@@ -12,6 +12,7 @@ function createWindow () {
     },
     darkTheme: true,
   })
+  // win.loadURL('http://0.0.0.0:8000')
   win.loadURL('https://bolls.life')
   win.maximize()
   win.setMenuBarVisibility(false)

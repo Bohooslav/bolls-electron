@@ -4,19 +4,22 @@
   "main": "main.js",
   "license": "MIT",
   "keywords": [
-    "Bible", "bolls"
+    "Bible",
+    "bolls"
   ],
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
-  "dependencies": {},
   "devDependencies": {
-    "electron": "^8.0.3",
-    "electron-builder": "^22.3.6"
+    "electron-builder": "^22.7.0",
+    "electron": "^8.3.4"
   },
-  "files": ["**/*", "build/icon.*"],
+  "files": [
+    "**/*",
+    "build/icon.*"
+  ],
   "build": {
     "appId": "bolls.life",
     "mac": {

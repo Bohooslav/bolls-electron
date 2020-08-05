@@ -1,6 +1,6 @@
 {
   "name": "bolls",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "main": "main.js",
   "license": "MIT",
   "keywords": [
@@ -50,5 +50,6 @@
     "icon": "./build/icon.png"
   },
   "author": "Bohooslav <bpavlisinec@gmail.com>",
-  "description": "Read the Bible with full emphasis on the God`s Word only. Sola scriptura. Read God`s Word with a deep understanding of His design. Bible elevates your soul with rapid ascending to calm, safety and more."
+  "description": "Read the Bible with full emphasis on the God`s Word only. Sola scriptura. Read God`s Word with a deep understanding of His design. Bible elevates your soul with rapid ascending to calm, safety and more.",
+  "dependencies": {}
 }

@@ -12,8 +12,9 @@ function createWindow () {
     },
     darkTheme: true,
   })
+  // win.webContents.openDevTools()
   // win.loadURL('http://0.0.0.0:8000')
-  win.loadURL('https://bolls.life')
+  win.loadURL('https://bolls.life', {userAgent: 'Chrome'})
   win.maximize()
   win.setMenuBarVisibility(false)
   win.once('ready-to-show', () => {

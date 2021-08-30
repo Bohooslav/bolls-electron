@@ -105,3 +105,4 @@ node_modules/
 .mypy_cache/
 .flatpak-builder/
 _build/
+package-lock.json

@@ -13,7 +13,7 @@
     "dist": "electron-builder"
   },
   "devDependencies": {
-    "electron": "^10.1.3",
+    "electron": "^18.0.1",
     "electron-builder": "^22.8.1"
   },
   "files": [

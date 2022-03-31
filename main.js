@@ -1,5 +1,7 @@
-let { app, BrowserWindow } = require("electron")
+const { app, BrowserWindow, shell } = require("electron")
 const windowStateKeeper = require('electron-window-state')
+
+let win
 
 function createWindow () {
   let mainWindowState = windowStateKeeper({
@@ -31,7 +33,7 @@ function createWindow () {
 
   // win.webContents.openDevTools()
   // win.loadURL('http://0.0.0.0:8000', {userAgent: 'Chrome'})
-  win.loadURL('https://bolls.life', {userAgent: 'Chrome'})
+  win.loadURL('https://bolls.life', {userAgent: "'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36'"})
   // win.maximize()
   win.setMenuBarVisibility(false)
   win.once('ready-to-show', () => {
@@ -39,7 +41,7 @@ function createWindow () {
   })
   win.webContents.on('new-window', function(e, url) {
     e.preventDefault()
-    require('electron').shell.openExternal(url)
+    shell.openExternal(url)
   })
 }
 

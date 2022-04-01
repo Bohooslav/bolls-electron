@@ -1,8 +1,10 @@
 {
-  "name": "bolls",
-  "version": "0.1.9",
+  "name": "Bolls",
+  "version": "0.2.1",
   "main": "main.js",
   "license": "MIT",
+  "repository": "https://github.com/Bohooslav/bolls-electron",
+  "homepage": "https://github.com/Bolls-Bible/bain/",
   "keywords": [
     "Bible",
     "bolls"
@@ -12,9 +14,14 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
+  "author": "Bohooslav <bpavlisinec@gmail.com>",
+  "description": "Read the Bible with full emphasis on the God`s Word only. Sola scriptura. Read God`s Word with a deep understanding of His design. Bible elevates your soul with rapid ascension to calm, safety and more.",
+  "dependencies": {
+    "electron-window-state": "^5.0.3"
+  },
   "devDependencies": {
     "electron": "^18.0.1",
-    "electron-builder": "^22.8.1"
+    "electron-builder": "^22.8.1" 
   },
   "files": [
     "**/*",
@@ -48,10 +55,5 @@
       "category": "Education"
     },
     "icon": "./build/icon.png"
-  },
-  "author": "Bohooslav <bpavlisinec@gmail.com>",
-  "description": "Read the Bible with full emphasis on the God`s Word only. Sola scriptura. Read God`s Word with a deep understanding of His design. Bible elevates your soul with rapid ascending to calm, safety and more.",
-  "dependencies": {
-    "electron-window-state": "^5.0.3"
   }
 }

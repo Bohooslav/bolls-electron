@@ -1,6 +1,6 @@
 {
-  "name": "Bolls",
-  "version": "0.2.1",
+  "name": "bolls",
+  "version": "0.2.2",
   "main": "main.js",
   "license": "MIT",
   "repository": "https://github.com/Bohooslav/bolls-electron",
@@ -11,6 +11,7 @@
   ],
   "scripts": {
     "start": "electron .",
+    "watch": "nodemon --exec electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
@@ -21,7 +22,8 @@
   },
   "devDependencies": {
     "electron": "^18.0.1",
-    "electron-builder": "^22.8.1" 
+    "electron-builder": "^22.8.1",
+    "nodemon": "^2.0.15"
   },
   "files": [
     "**/*",

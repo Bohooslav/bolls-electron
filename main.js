@@ -69,7 +69,6 @@ function createWindow() {
     icon: 'build/icon.png',
     webPreferences: {
       sandbox: true,
-      defaultFontFamily: 'sansSerif',
     },
     darkTheme: true,
     x: mainWindowState.x + 64 * (windows_count - 1),

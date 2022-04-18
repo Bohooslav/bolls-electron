@@ -1,0 +1,50 @@
+# name of your github action
+name: CI # this will help you specify where to run 
+on:
+  push:
+    branches:
+    # this will run on the electron branch
+      - electron # this is where the magic happens, each job happens in parallel btw
+jobs:
+  build_on_mac:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        ref: electron
+    - uses: actions/setup-node@master
+      with:
+        node-version: 16.14.2
+    - name: see directory in dist
+      run: ls ./electron
+    # - name: add key to single keychain
+      # run: security import ./electron/june-ai-single2-certs-electron.p12 -P ${{ secrets.CSC_KEY_PASSWORD }}
+    # - name: electron mac os security identities
+      # run: security find-identity -v
+    - name: Install dependencies
+      run: npm install
+    - name: Build on MacOS
+      env:
+        ELECTRON: true
+        APP_VERSION_NUMBER: 0.0.2
+      run: npm run dist
+    # - name: Build Electron
+    #   env:
+    #     ELECTRON: true
+    #     # CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+    #     APP_VERSION_NUMBER: 0.0.2
+    #   run: yarn electron:buildUnix
+    - name: see directory
+      run: ls
+    - name: check env
+      run: echo $ELECTRON $FEATHERS_URL
+    - name: see directory in dist
+      run: ls ./dist
+    - uses: lucyio/upload-to-release@master
+      with:
+        name: lucyio/electron
+        path: ./dist
+        action: unpublished
+        release_id: 0.x.x
+        release-repo: lucyio/electron
+  

@@ -21,7 +21,7 @@
     "electron-window-state": "^5.0.3"
   },
   "devDependencies": {
-    "electron": "^26.0.0",
+    "electron": "^26.2.1",
     "electron-builder": "^24.6.3",
     "nodemon": "^3.0.1"
   },

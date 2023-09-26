@@ -1,6 +1,6 @@
 {
   "name": "bolls",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "main": "main.js",
   "license": "MIT",
   "repository": "https://github.com/Bohooslav/bolls-electron",
@@ -18,11 +18,12 @@
   "author": "Bohooslav <bpavlisinec@gmail.com>",
   "description": "Read the Bible with full emphasis on the God`s Word only. Sola scriptura. Read God`s Word with a deep understanding of His design. Bible elevates your soul with rapid ascension to calm, safety and more.",
   "dependencies": {
+    "electron-store": "^8.1.0",
     "electron-window-state": "^5.0.3"
   },
   "devDependencies": {
-    "electron": "^26.0.0",
-    "electron-builder": "^24.6.3",
+    "electron": "^26.2.2",
+    "electron-builder": "^24.6.4",
     "nodemon": "^3.0.1"
   },
   "files": [

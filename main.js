@@ -1,6 +1,6 @@
-const { app, BrowserWindow, shell, Menu, session, Tray } = require("electron");
-const windowStateKeeper = require("electron-window-state");
-const Store = require("electron-store");
+import { app, BrowserWindow, shell, Menu, session, Tray } from "electron";
+import Store from "electron-store";
+import windowStateKeeper from "electron-window-state";
 
 let win, tray, mainWindowState;
 
@@ -118,6 +118,7 @@ function createWindow() {
     webPreferences: {
       sandbox: true,
       defaultFontFamily: "sansSerif",
+      devTools: !app.isPackaged,
     },
     darkTheme: true,
     x: mainWindowState.x + 64 * (windows_count - 1),
@@ -128,14 +129,17 @@ function createWindow() {
 
   // Let us register listeners on the window, so we can update the state
   // automatically (the listeners will be removed when the window is closed)
-  // and restore the maximized or full screen state
-  mainWindowState.manage(win);
+  // and restore the maximized or full screen state#
+  if (windows_count === 0) {
+    // Manage only main window
+    mainWindowState.manage(win);
+  }
 
   // win.webContents.openDevTools()
   // win.loadURL('http://0.0.0.0:8000', {userAgent: 'Chrome'})
   win.loadURL("https://bolls.life", {
     userAgent:
-      "'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36'",
+      "'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0'",
   });
   // win.setMenuBarVisibility(false)
   win.once("ready-to-show", () => {
@@ -154,7 +158,7 @@ function createWindow() {
   });
 }
 
-app.on("ready", () => {
+app.whenReady().then(() => {
   mainWindowState = windowStateKeeper({
     defaultWidth: 1000,
     defaultHeight: 800,
@@ -170,19 +174,17 @@ app.on("ready", () => {
     // now memorize you did this, but localStorage is not available in main process
     store.set("didClear", "true");
   }
+
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
 });
 
 // Make OSX work same as all other systems
 app.on("window-all-closed", () => {
-  app.quit();
-});
-
-app.on("activate", () => {
-  // On macOS it"s common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (win === null) {
-    createWindow();
+  if (process.platform !== "darwin") {
+    app.quit();
   }
 });
-
-global.sharedObject = { argv: process.argv };

@@ -1,17 +1,11 @@
-import electron$1, { ipcMain, app, shell, Menu, session, BrowserWindow, Tray } from "electron";
+import electron, { ipcMain, app, shell, Menu, session, BrowserWindow, Tray } from "electron";
 import process$1 from "node:process";
-import path$2 from "node:path";
+import path from "node:path";
 import { promisify, isDeepStrictEqual } from "node:util";
-import fs$1 from "node:fs";
+import fs from "node:fs";
 import crypto from "node:crypto";
 import assert from "node:assert";
 import os from "node:os";
-import require$$0$3 from "path";
-import require$$1$1 from "fs";
-import require$$0$1 from "constants";
-import require$$0$2 from "stream";
-import require$$4$1 from "util";
-import require$$5$1 from "assert";
 import __cjs_mod__ from "node:module";
 const __filename = import.meta.filename;
 const __dirname = import.meta.dirname;
@@ -233,36 +227,36 @@ const homedir = os.homedir();
 const tmpdir = os.tmpdir();
 const { env } = process$1;
 const macos = (name) => {
-  const library = path$2.join(homedir, "Library");
+  const library = path.join(homedir, "Library");
   return {
-    data: path$2.join(library, "Application Support", name),
-    config: path$2.join(library, "Preferences", name),
-    cache: path$2.join(library, "Caches", name),
-    log: path$2.join(library, "Logs", name),
-    temp: path$2.join(tmpdir, name)
+    data: path.join(library, "Application Support", name),
+    config: path.join(library, "Preferences", name),
+    cache: path.join(library, "Caches", name),
+    log: path.join(library, "Logs", name),
+    temp: path.join(tmpdir, name)
   };
 };
 const windows = (name) => {
-  const appData = env.APPDATA || path$2.join(homedir, "AppData", "Roaming");
-  const localAppData = env.LOCALAPPDATA || path$2.join(homedir, "AppData", "Local");
+  const appData = env.APPDATA || path.join(homedir, "AppData", "Roaming");
+  const localAppData = env.LOCALAPPDATA || path.join(homedir, "AppData", "Local");
   return {
     // Data/config/cache/log are invented by me as Windows isn't opinionated about this
-    data: path$2.join(localAppData, name, "Data"),
-    config: path$2.join(appData, name, "Config"),
-    cache: path$2.join(localAppData, name, "Cache"),
-    log: path$2.join(localAppData, name, "Log"),
-    temp: path$2.join(tmpdir, name)
+    data: path.join(localAppData, name, "Data"),
+    config: path.join(appData, name, "Config"),
+    cache: path.join(localAppData, name, "Cache"),
+    log: path.join(localAppData, name, "Log"),
+    temp: path.join(tmpdir, name)
   };
 };
 const linux = (name) => {
-  const username = path$2.basename(homedir);
+  const username = path.basename(homedir);
   return {
-    data: path$2.join(env.XDG_DATA_HOME || path$2.join(homedir, ".local", "share"), name),
-    config: path$2.join(env.XDG_CONFIG_HOME || path$2.join(homedir, ".config"), name),
-    cache: path$2.join(env.XDG_CACHE_HOME || path$2.join(homedir, ".cache"), name),
+    data: path.join(env.XDG_DATA_HOME || path.join(homedir, ".local", "share"), name),
+    config: path.join(env.XDG_CONFIG_HOME || path.join(homedir, ".config"), name),
+    cache: path.join(env.XDG_CACHE_HOME || path.join(homedir, ".cache"), name),
     // https://wiki.debian.org/XDGBaseDirectorySpecification#state
-    log: path$2.join(env.XDG_STATE_HOME || path$2.join(homedir, ".local", "state"), name),
-    temp: path$2.join(tmpdir, username, name)
+    log: path.join(env.XDG_STATE_HOME || path.join(homedir, ".local", "state"), name),
+    temp: path.join(tmpdir, username, name)
   };
 };
 function envPaths(name, { suffix = "nodejs" } = {}) {
@@ -423,44 +417,44 @@ const retryifySync = (fn, isRetriableError) => {
 const FS = {
   attempt: {
     /* ASYNC */
-    chmod: attemptifyAsync(promisify(fs$1.chmod), Handlers.onChangeError),
-    chown: attemptifyAsync(promisify(fs$1.chown), Handlers.onChangeError),
-    close: attemptifyAsync(promisify(fs$1.close), NOOP),
-    fsync: attemptifyAsync(promisify(fs$1.fsync), NOOP),
-    mkdir: attemptifyAsync(promisify(fs$1.mkdir), NOOP),
-    realpath: attemptifyAsync(promisify(fs$1.realpath), NOOP),
-    stat: attemptifyAsync(promisify(fs$1.stat), NOOP),
-    unlink: attemptifyAsync(promisify(fs$1.unlink), NOOP),
+    chmod: attemptifyAsync(promisify(fs.chmod), Handlers.onChangeError),
+    chown: attemptifyAsync(promisify(fs.chown), Handlers.onChangeError),
+    close: attemptifyAsync(promisify(fs.close), NOOP),
+    fsync: attemptifyAsync(promisify(fs.fsync), NOOP),
+    mkdir: attemptifyAsync(promisify(fs.mkdir), NOOP),
+    realpath: attemptifyAsync(promisify(fs.realpath), NOOP),
+    stat: attemptifyAsync(promisify(fs.stat), NOOP),
+    unlink: attemptifyAsync(promisify(fs.unlink), NOOP),
     /* SYNC */
-    chmodSync: attemptifySync(fs$1.chmodSync, Handlers.onChangeError),
-    chownSync: attemptifySync(fs$1.chownSync, Handlers.onChangeError),
-    closeSync: attemptifySync(fs$1.closeSync, NOOP),
-    existsSync: attemptifySync(fs$1.existsSync, NOOP),
-    fsyncSync: attemptifySync(fs$1.fsync, NOOP),
-    mkdirSync: attemptifySync(fs$1.mkdirSync, NOOP),
-    realpathSync: attemptifySync(fs$1.realpathSync, NOOP),
-    statSync: attemptifySync(fs$1.statSync, NOOP),
-    unlinkSync: attemptifySync(fs$1.unlinkSync, NOOP)
+    chmodSync: attemptifySync(fs.chmodSync, Handlers.onChangeError),
+    chownSync: attemptifySync(fs.chownSync, Handlers.onChangeError),
+    closeSync: attemptifySync(fs.closeSync, NOOP),
+    existsSync: attemptifySync(fs.existsSync, NOOP),
+    fsyncSync: attemptifySync(fs.fsync, NOOP),
+    mkdirSync: attemptifySync(fs.mkdirSync, NOOP),
+    realpathSync: attemptifySync(fs.realpathSync, NOOP),
+    statSync: attemptifySync(fs.statSync, NOOP),
+    unlinkSync: attemptifySync(fs.unlinkSync, NOOP)
   },
   retry: {
     /* ASYNC */
-    close: retryifyAsync(promisify(fs$1.close), Handlers.isRetriableError),
-    fsync: retryifyAsync(promisify(fs$1.fsync), Handlers.isRetriableError),
-    open: retryifyAsync(promisify(fs$1.open), Handlers.isRetriableError),
-    readFile: retryifyAsync(promisify(fs$1.readFile), Handlers.isRetriableError),
-    rename: retryifyAsync(promisify(fs$1.rename), Handlers.isRetriableError),
-    stat: retryifyAsync(promisify(fs$1.stat), Handlers.isRetriableError),
-    write: retryifyAsync(promisify(fs$1.write), Handlers.isRetriableError),
-    writeFile: retryifyAsync(promisify(fs$1.writeFile), Handlers.isRetriableError),
+    close: retryifyAsync(promisify(fs.close), Handlers.isRetriableError),
+    fsync: retryifyAsync(promisify(fs.fsync), Handlers.isRetriableError),
+    open: retryifyAsync(promisify(fs.open), Handlers.isRetriableError),
+    readFile: retryifyAsync(promisify(fs.readFile), Handlers.isRetriableError),
+    rename: retryifyAsync(promisify(fs.rename), Handlers.isRetriableError),
+    stat: retryifyAsync(promisify(fs.stat), Handlers.isRetriableError),
+    write: retryifyAsync(promisify(fs.write), Handlers.isRetriableError),
+    writeFile: retryifyAsync(promisify(fs.writeFile), Handlers.isRetriableError),
     /* SYNC */
-    closeSync: retryifySync(fs$1.closeSync, Handlers.isRetriableError),
-    fsyncSync: retryifySync(fs$1.fsyncSync, Handlers.isRetriableError),
-    openSync: retryifySync(fs$1.openSync, Handlers.isRetriableError),
-    readFileSync: retryifySync(fs$1.readFileSync, Handlers.isRetriableError),
-    renameSync: retryifySync(fs$1.renameSync, Handlers.isRetriableError),
-    statSync: retryifySync(fs$1.statSync, Handlers.isRetriableError),
-    writeSync: retryifySync(fs$1.writeSync, Handlers.isRetriableError),
-    writeFileSync: retryifySync(fs$1.writeFileSync, Handlers.isRetriableError)
+    closeSync: retryifySync(fs.closeSync, Handlers.isRetriableError),
+    fsyncSync: retryifySync(fs.fsyncSync, Handlers.isRetriableError),
+    openSync: retryifySync(fs.openSync, Handlers.isRetriableError),
+    readFileSync: retryifySync(fs.readFileSync, Handlers.isRetriableError),
+    renameSync: retryifySync(fs.renameSync, Handlers.isRetriableError),
+    statSync: retryifySync(fs.statSync, Handlers.isRetriableError),
+    writeSync: retryifySync(fs.writeSync, Handlers.isRetriableError),
+    writeFileSync: retryifySync(fs.writeFileSync, Handlers.isRetriableError)
   }
 };
 const DEFAULT_ENCODING = "utf8";
@@ -569,7 +563,7 @@ const Temp = {
     }
   },
   truncate: (filePath) => {
-    const basename = path$2.basename(filePath);
+    const basename = path.basename(filePath);
     if (basename.length <= LIMIT_BASENAME_LENGTH)
       return filePath;
     const truncable = /^(\.?)(.*?)((?:\.[^.]+)?(?:\.tmp-\d{10}[a-f0-9]{6})?)$/.exec(basename);
@@ -580,9 +574,9 @@ const Temp = {
   }
 };
 whenExit(Temp.purgeSyncAll);
-function writeFileSync$1(filePath, data, options = DEFAULT_WRITE_OPTIONS) {
+function writeFileSync(filePath, data, options = DEFAULT_WRITE_OPTIONS) {
   if (isString(options))
-    return writeFileSync$1(filePath, data, { encoding: options });
+    return writeFileSync(filePath, data, { encoding: options });
   const timeout = Date.now() + ((options.timeout ?? DEFAULT_TIMEOUT_SYNC) || -1);
   let tempDisposer = null;
   let tempPath = null;
@@ -607,7 +601,7 @@ function writeFileSync$1(filePath, data, options = DEFAULT_WRITE_OPTIONS) {
       }
     }
     if (!filePathExists) {
-      const parentPath = path$2.dirname(filePath);
+      const parentPath = path.dirname(filePath);
       FS.attempt.mkdirSync(parentPath, {
         mode: DEFAULT_FOLDER_MODE,
         recursive: true
@@ -655,7 +649,6 @@ function writeFileSync$1(filePath, data, options = DEFAULT_WRITE_OPTIONS) {
       Temp.purge(tempPath);
   }
 }
-var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 function getDefaultExportFromCjs(x) {
   return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
 }
@@ -791,10 +784,10 @@ var code$3 = {};
   function interpolate(x) {
     return typeof x == "number" || typeof x == "boolean" || x === null ? x : safeStringify(Array.isArray(x) ? x.join(",") : x);
   }
-  function stringify2(x) {
+  function stringify(x) {
     return new _Code(safeStringify(x));
   }
-  exports.stringify = stringify2;
+  exports.stringify = stringify;
   function safeStringify(x) {
     return JSON.stringify(x).replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
   }
@@ -1693,12 +1686,12 @@ function alwaysValidSchema$1(it, schema) {
 }
 util$1.alwaysValidSchema = alwaysValidSchema$1;
 function checkUnknownRules$1(it, schema = it.schema) {
-  const { opts, self: self2 } = it;
+  const { opts, self } = it;
   if (!opts.strictSchema)
     return;
   if (typeof schema === "boolean")
     return;
-  const rules2 = self2.RULES.keywords;
+  const rules2 = self.RULES.keywords;
   for (const key in schema) {
     if (!rules2[key])
       checkStrictMode$1(it, `unknown keyword: "${key}"`);
@@ -2055,8 +2048,8 @@ rules$1.getRules = getRules$1;
 var applicability$1 = {};
 Object.defineProperty(applicability$1, "__esModule", { value: true });
 applicability$1.shouldUseRule = applicability$1.shouldUseGroup = applicability$1.schemaHasRulesForType = void 0;
-function schemaHasRulesForType$1({ schema, self: self2 }, type2) {
-  const group = self2.RULES.types[type2];
+function schemaHasRulesForType$1({ schema, self }, type2) {
+  const group = self.RULES.types[type2];
   return group && group !== true && shouldUseGroup$1(schema, group);
 }
 applicability$1.schemaHasRulesForType = schemaHasRulesForType$1;
@@ -2496,7 +2489,7 @@ function validSchemaType$1(schema, schemaType, allowUndefined = false) {
   return !schemaType.length || schemaType.some((st) => st === "array" ? Array.isArray(schema) : st === "object" ? schema && typeof schema == "object" && !Array.isArray(schema) : typeof schema == st || allowUndefined && typeof schema == "undefined");
 }
 keyword$1.validSchemaType = validSchemaType$1;
-function validateKeywordUsage$1({ schema, opts, self: self2, errSchemaPath }, def2, keyword2) {
+function validateKeywordUsage$1({ schema, opts, self, errSchemaPath }, def2, keyword2) {
   if (Array.isArray(def2.keyword) ? !def2.keyword.includes(keyword2) : def2.keyword !== keyword2) {
     throw new Error("ajv implementation error");
   }
@@ -2507,9 +2500,9 @@ function validateKeywordUsage$1({ schema, opts, self: self2, errSchemaPath }, de
   if (def2.validateSchema) {
     const valid2 = def2.validateSchema(schema[keyword2]);
     if (!valid2) {
-      const msg = `keyword "${keyword2}" value is invalid at path "${errSchemaPath}": ` + self2.errorsText(def2.validateSchema.errors);
+      const msg = `keyword "${keyword2}" value is invalid at path "${errSchemaPath}": ` + self.errorsText(def2.validateSchema.errors);
       if (opts.validateSchema === "log")
-        self2.logger.error(msg);
+        self.logger.error(msg);
       else
         throw new Error(msg);
     }
@@ -2945,11 +2938,11 @@ function subschemaCode$1(it, valid2) {
   }
   (0, boolSchema_1$1.boolOrEmptySchema)(it, valid2);
 }
-function schemaCxtHasRules$1({ schema, self: self2 }) {
+function schemaCxtHasRules$1({ schema, self }) {
   if (typeof schema == "boolean")
     return !schema;
   for (const key in schema)
-    if (self2.RULES.all[key])
+    if (self.RULES.all[key])
       return true;
   return false;
 }
@@ -2978,9 +2971,9 @@ function typeAndKeywords$1(it, errsCount) {
   schemaKeywords$1(it, types2, !checkedTypes, errsCount);
 }
 function checkRefsAndKeywords$1(it) {
-  const { schema, errSchemaPath, opts, self: self2 } = it;
-  if (schema.$ref && opts.ignoreKeywordsWithRef && (0, util_1$Q.schemaHasRulesButRef)(schema, self2.RULES)) {
-    self2.logger.warn(`$ref: keywords ignored in schema at path "${errSchemaPath}"`);
+  const { schema, errSchemaPath, opts, self } = it;
+  if (schema.$ref && opts.ignoreKeywordsWithRef && (0, util_1$Q.schemaHasRulesButRef)(schema, self.RULES)) {
+    self.logger.warn(`$ref: keywords ignored in schema at path "${errSchemaPath}"`);
   }
 }
 function checkNoDefault$1(it) {
@@ -3026,8 +3019,8 @@ function assignEvaluated$1({ gen, evaluated, props, items: items2 }) {
     gen.assign((0, codegen_1$X._)`${evaluated}.items`, items2);
 }
 function schemaKeywords$1(it, types2, typeErrors, errsCount) {
-  const { gen, schema, data, allErrors, opts, self: self2 } = it;
-  const { RULES } = self2;
+  const { gen, schema, data, allErrors, opts, self } = it;
+  const { RULES } = self;
   if (schema.$ref && (opts.ignoreKeywordsWithRef || !(0, util_1$Q.schemaHasRulesButRef)(schema, RULES))) {
     gen.block(() => keywordCode$1(it, "$ref", RULES.all.$ref.definition));
     return;
@@ -4904,11 +4897,11 @@ const def$11 = {
   schemaType: "string",
   code(cxt) {
     const { gen, schema: $ref, it } = cxt;
-    const { baseId, schemaEnv: env2, validateName, opts, self: self2 } = it;
+    const { baseId, schemaEnv: env2, validateName, opts, self } = it;
     const { root } = env2;
     if (($ref === "#" || $ref === "#/") && baseId === root.baseId)
       return callRootRef();
-    const schOrEnv = compile_1$4.resolveRef.call(self2, root, baseId, $ref);
+    const schOrEnv = compile_1$4.resolveRef.call(self, root, baseId, $ref);
     if (schOrEnv === void 0)
       throw new ref_error_1$3.default(it.opts.uriResolver, baseId, $ref);
     if (schOrEnv instanceof compile_1$4.SchemaEnv)
@@ -6243,11 +6236,11 @@ function dynamicAnchor(cxt, anchor) {
 }
 dynamicAnchor$1.dynamicAnchor = dynamicAnchor;
 function _getValidate(cxt) {
-  const { schemaEnv, schema, self: self2 } = cxt.it;
+  const { schemaEnv, schema, self } = cxt.it;
   const { root, baseId, localRefs, meta } = schemaEnv.root;
-  const { schemaId } = self2.opts;
+  const { schemaId } = self.opts;
   const sch = new compile_1$3.SchemaEnv({ schema, schemaId, root, baseId, localRefs, meta });
-  compile_1$3.compileSchema.call(self2, sch);
+  compile_1$3.compileSchema.call(self, sch);
   return (0, ref_1$2.getValidate)(cxt, sch);
 }
 dynamicAnchor$1.default = def$D;
@@ -6484,7 +6477,7 @@ const def$u = {
   error: error$k,
   code(cxt, ruleType) {
     const { gen, data, $data, schema, schemaCode, it } = cxt;
-    const { opts, errSchemaPath, schemaEnv, self: self2 } = it;
+    const { opts, errSchemaPath, schemaEnv, self } = it;
     if (!opts.validateFormats)
       return;
     if ($data)
@@ -6493,7 +6486,7 @@ const def$u = {
       validateFormat();
     function validate$DataFormat() {
       const fmts = gen.scopeValue("formats", {
-        ref: self2.formats,
+        ref: self.formats,
         code: opts.code.formats
       });
       const fDef = gen.const("fDef", (0, codegen_1$x._)`${fmts}[${schemaCode}]`);
@@ -6513,7 +6506,7 @@ const def$u = {
       }
     }
     function validateFormat() {
-      const formatDef = self2.formats[schema];
+      const formatDef = self.formats[schema];
       if (!formatDef) {
         unknownFormat();
         return;
@@ -6525,7 +6518,7 @@ const def$u = {
         cxt.pass(validCondition());
       function unknownFormat() {
         if (opts.strictSchema === false) {
-          self2.logger.warn(unknownMsg());
+          self.logger.warn(unknownMsg());
           return;
         }
         throw new Error(unknownMsg());
@@ -7651,10 +7644,10 @@ var code$1 = {};
   function interpolate(x) {
     return typeof x == "number" || typeof x == "boolean" || x === null ? x : safeStringify(Array.isArray(x) ? x.join(",") : x);
   }
-  function stringify2(x) {
+  function stringify(x) {
     return new _Code(safeStringify(x));
   }
-  exports.stringify = stringify2;
+  exports.stringify = stringify;
   function safeStringify(x) {
     return JSON.stringify(x).replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
   }
@@ -8553,12 +8546,12 @@ function alwaysValidSchema(it, schema) {
 }
 util.alwaysValidSchema = alwaysValidSchema;
 function checkUnknownRules(it, schema = it.schema) {
-  const { opts, self: self2 } = it;
+  const { opts, self } = it;
   if (!opts.strictSchema)
     return;
   if (typeof schema === "boolean")
     return;
-  const rules2 = self2.RULES.keywords;
+  const rules2 = self.RULES.keywords;
   for (const key in schema) {
     if (!rules2[key])
       checkStrictMode(it, `unknown keyword: "${key}"`);
@@ -8915,8 +8908,8 @@ rules.getRules = getRules;
 var applicability = {};
 Object.defineProperty(applicability, "__esModule", { value: true });
 applicability.shouldUseRule = applicability.shouldUseGroup = applicability.schemaHasRulesForType = void 0;
-function schemaHasRulesForType({ schema, self: self2 }, type2) {
-  const group = self2.RULES.types[type2];
+function schemaHasRulesForType({ schema, self }, type2) {
+  const group = self.RULES.types[type2];
   return group && group !== true && shouldUseGroup(schema, group);
 }
 applicability.schemaHasRulesForType = schemaHasRulesForType;
@@ -9356,7 +9349,7 @@ function validSchemaType(schema, schemaType, allowUndefined = false) {
   return !schemaType.length || schemaType.some((st) => st === "array" ? Array.isArray(schema) : st === "object" ? schema && typeof schema == "object" && !Array.isArray(schema) : typeof schema == st || allowUndefined && typeof schema == "undefined");
 }
 keyword.validSchemaType = validSchemaType;
-function validateKeywordUsage({ schema, opts, self: self2, errSchemaPath }, def2, keyword2) {
+function validateKeywordUsage({ schema, opts, self, errSchemaPath }, def2, keyword2) {
   if (Array.isArray(def2.keyword) ? !def2.keyword.includes(keyword2) : def2.keyword !== keyword2) {
     throw new Error("ajv implementation error");
   }
@@ -9367,9 +9360,9 @@ function validateKeywordUsage({ schema, opts, self: self2, errSchemaPath }, def2
   if (def2.validateSchema) {
     const valid2 = def2.validateSchema(schema[keyword2]);
     if (!valid2) {
-      const msg = `keyword "${keyword2}" value is invalid at path "${errSchemaPath}": ` + self2.errorsText(def2.validateSchema.errors);
+      const msg = `keyword "${keyword2}" value is invalid at path "${errSchemaPath}": ` + self.errorsText(def2.validateSchema.errors);
       if (opts.validateSchema === "log")
-        self2.logger.error(msg);
+        self.logger.error(msg);
       else
         throw new Error(msg);
     }
@@ -9777,11 +9770,11 @@ function subschemaCode(it, valid2) {
   }
   (0, boolSchema_1.boolOrEmptySchema)(it, valid2);
 }
-function schemaCxtHasRules({ schema, self: self2 }) {
+function schemaCxtHasRules({ schema, self }) {
   if (typeof schema == "boolean")
     return !schema;
   for (const key in schema)
-    if (self2.RULES.all[key])
+    if (self.RULES.all[key])
       return true;
   return false;
 }
@@ -9810,9 +9803,9 @@ function typeAndKeywords(it, errsCount) {
   schemaKeywords(it, types2, !checkedTypes, errsCount);
 }
 function checkRefsAndKeywords(it) {
-  const { schema, errSchemaPath, opts, self: self2 } = it;
-  if (schema.$ref && opts.ignoreKeywordsWithRef && (0, util_1$l.schemaHasRulesButRef)(schema, self2.RULES)) {
-    self2.logger.warn(`$ref: keywords ignored in schema at path "${errSchemaPath}"`);
+  const { schema, errSchemaPath, opts, self } = it;
+  if (schema.$ref && opts.ignoreKeywordsWithRef && (0, util_1$l.schemaHasRulesButRef)(schema, self.RULES)) {
+    self.logger.warn(`$ref: keywords ignored in schema at path "${errSchemaPath}"`);
   }
 }
 function checkNoDefault(it) {
@@ -9858,8 +9851,8 @@ function assignEvaluated({ gen, evaluated, props, items: items2 }) {
     gen.assign((0, codegen_1$n._)`${evaluated}.items`, items2);
 }
 function schemaKeywords(it, types2, typeErrors, errsCount) {
-  const { gen, schema, data, allErrors, opts, self: self2 } = it;
-  const { RULES } = self2;
+  const { gen, schema, data, allErrors, opts, self } = it;
+  const { RULES } = self;
   if (schema.$ref && (opts.ignoreKeywordsWithRef || !(0, util_1$l.schemaHasRulesButRef)(schema, RULES))) {
     gen.block(() => keywordCode(it, "$ref", RULES.all.$ref.definition));
     return;
@@ -11089,11 +11082,11 @@ const def$r = {
   schemaType: "string",
   code(cxt) {
     const { gen, schema: $ref, it } = cxt;
-    const { baseId, schemaEnv: env2, validateName, opts, self: self2 } = it;
+    const { baseId, schemaEnv: env2, validateName, opts, self } = it;
     const { root } = env2;
     if (($ref === "#" || $ref === "#/") && baseId === root.baseId)
       return callRootRef();
-    const schOrEnv = compile_1$1.resolveRef.call(self2, root, baseId, $ref);
+    const schOrEnv = compile_1$1.resolveRef.call(self, root, baseId, $ref);
     if (schOrEnv === void 0)
       throw new ref_error_1$1.default(it.opts.uriResolver, baseId, $ref);
     if (schOrEnv instanceof compile_1$1.SchemaEnv)
@@ -12422,7 +12415,7 @@ const def$1 = {
   error: error$1,
   code(cxt, ruleType) {
     const { gen, data, $data, schema, schemaCode, it } = cxt;
-    const { opts, errSchemaPath, schemaEnv, self: self2 } = it;
+    const { opts, errSchemaPath, schemaEnv, self } = it;
     if (!opts.validateFormats)
       return;
     if ($data)
@@ -12431,7 +12424,7 @@ const def$1 = {
       validateFormat();
     function validate$DataFormat() {
       const fmts = gen.scopeValue("formats", {
-        ref: self2.formats,
+        ref: self.formats,
         code: opts.code.formats
       });
       const fDef = gen.const("fDef", (0, codegen_1$1._)`${fmts}[${schemaCode}]`);
@@ -12451,7 +12444,7 @@ const def$1 = {
       }
     }
     function validateFormat() {
-      const formatDef = self2.formats[schema];
+      const formatDef = self.formats[schema];
       if (!formatDef) {
         unknownFormat();
         return;
@@ -12463,7 +12456,7 @@ const def$1 = {
         cxt.pass(validCondition());
       function unknownFormat() {
         if (opts.strictSchema === false) {
-          self2.logger.warn(unknownMsg());
+          self.logger.warn(unknownMsg());
           return;
         }
         throw new Error(unknownMsg());
@@ -12971,17 +12964,17 @@ var ajvExports = ajv.exports;
     error: error2,
     code(cxt) {
       const { gen, data, schemaCode, keyword: keyword2, it } = cxt;
-      const { opts, self: self2 } = it;
+      const { opts, self } = it;
       if (!opts.validateFormats)
         return;
-      const fCxt = new ajv_1.KeywordCxt(it, self2.RULES.all.format.definition, "format");
+      const fCxt = new ajv_1.KeywordCxt(it, self.RULES.all.format.definition, "format");
       if (fCxt.$data)
         validate$DataFormat();
       else
         validateFormat();
       function validate$DataFormat() {
         const fmts = gen.scopeValue("formats", {
-          ref: self2.formats,
+          ref: self.formats,
           code: opts.code.formats
         });
         const fmt = gen.const("fmt", (0, codegen_12._)`${fmts}[${fCxt.schemaCode}]`);
@@ -12989,7 +12982,7 @@ var ajvExports = ajv.exports;
       }
       function validateFormat() {
         const format2 = fCxt.schema;
-        const fmtDef = self2.formats[format2];
+        const fmtDef = self.formats[format2];
         if (!fmtDef || fmtDef === true)
           return;
         if (typeof fmtDef != "object" || fmtDef instanceof RegExp || typeof fmtDef.compare != "function") {
@@ -14893,7 +14886,7 @@ class Conf {
     this.events = new EventTarget();
     this.#encryptionKey = options.encryptionKey;
     const fileExtension = options.fileExtension ? `.${options.fileExtension}` : "";
-    this.path = path$2.resolve(options.cwd, `${options.configName ?? "config"}${fileExtension}`);
+    this.path = path.resolve(options.cwd, `${options.configName ?? "config"}${fileExtension}`);
     const fileStore = this.store;
     const store2 = Object.assign(createPlainObject(), options.defaults, fileStore);
     if (options.migrations) {
@@ -15026,7 +15019,7 @@ class Conf {
   }
   get store() {
     try {
-      const data = fs$1.readFileSync(this.path, this.#encryptionKey ? null : "utf8");
+      const data = fs.readFileSync(this.path, this.#encryptionKey ? null : "utf8");
       const dataString = this._encryptData(data);
       const deserializedData = this._deserialize(dataString);
       this._validate(deserializedData);
@@ -15098,7 +15091,7 @@ class Conf {
     throw new Error("Config schema violation: " + errors2.join("; "));
   }
   _ensureDirectory() {
-    fs$1.mkdirSync(path$2.dirname(this.path), { recursive: true });
+    fs.mkdirSync(path.dirname(this.path), { recursive: true });
   }
   _write(value) {
     let data = this._serialize(value);
@@ -15109,13 +15102,13 @@ class Conf {
       data = concatUint8Arrays([initializationVector, stringToUint8Array(":"), cipher.update(stringToUint8Array(data)), cipher.final()]);
     }
     if (process$1.env.SNAP) {
-      fs$1.writeFileSync(this.path, data, { mode: this.#options.configFileMode });
+      fs.writeFileSync(this.path, data, { mode: this.#options.configFileMode });
     } else {
       try {
-        writeFileSync$1(this.path, data, { mode: this.#options.configFileMode });
+        writeFileSync(this.path, data, { mode: this.#options.configFileMode });
       } catch (error2) {
         if (error2?.code === "EXDEV") {
-          fs$1.writeFileSync(this.path, data, { mode: this.#options.configFileMode });
+          fs.writeFileSync(this.path, data, { mode: this.#options.configFileMode });
           return;
         }
         throw error2;
@@ -15124,15 +15117,15 @@ class Conf {
   }
   _watch() {
     this._ensureDirectory();
-    if (!fs$1.existsSync(this.path)) {
+    if (!fs.existsSync(this.path)) {
       this._write(createPlainObject());
     }
     if (process$1.platform === "win32") {
-      fs$1.watch(this.path, { persistent: false }, debounceFunction(() => {
+      fs.watch(this.path, { persistent: false }, debounceFunction(() => {
         this.events.dispatchEvent(new Event("change"));
       }, { wait: 100 }));
     } else {
-      fs$1.watchFile(this.path, { persistent: false }, debounceFunction(() => {
+      fs.watchFile(this.path, { persistent: false }, debounceFunction(() => {
         this.events.dispatchEvent(new Event("change"));
       }, { wait: 5e3 }));
     }
@@ -15233,7 +15226,7 @@ class ElectronStore extends Conf {
     let defaultCwd;
     let appVersion;
     if (process$1.type === "renderer") {
-      const appData = electron$1.ipcRenderer.sendSync("electron-store-get-data");
+      const appData = electron.ipcRenderer.sendSync("electron-store-get-data");
       if (!appData) {
         throw new Error("Electron Store: You need to call `.initRenderer()` from the main process.");
       }
@@ -15247,7 +15240,7 @@ class ElectronStore extends Conf {
     };
     options.projectVersion ||= appVersion;
     if (options.cwd) {
-      options.cwd = path$2.isAbsolute(options.cwd) ? options.cwd : path$2.join(defaultCwd, options.cwd);
+      options.cwd = path.isAbsolute(options.cwd) ? options.cwd : path.join(defaultCwd, options.cwd);
     } else {
       options.cwd = defaultCwd;
     }
@@ -15265,1125 +15258,7 @@ class ElectronStore extends Conf {
     }
   }
 }
-var polyfills;
-var hasRequiredPolyfills;
-function requirePolyfills() {
-  if (hasRequiredPolyfills) return polyfills;
-  hasRequiredPolyfills = 1;
-  var constants2 = require$$0$1;
-  var origCwd = process.cwd;
-  var cwd = null;
-  var platform = process.env.GRACEFUL_FS_PLATFORM || process.platform;
-  process.cwd = function() {
-    if (!cwd)
-      cwd = origCwd.call(process);
-    return cwd;
-  };
-  try {
-    process.cwd();
-  } catch (er) {
-  }
-  if (typeof process.chdir === "function") {
-    var chdir = process.chdir;
-    process.chdir = function(d) {
-      cwd = null;
-      chdir.call(process, d);
-    };
-    if (Object.setPrototypeOf) Object.setPrototypeOf(process.chdir, chdir);
-  }
-  polyfills = patch2;
-  function patch2(fs2) {
-    if (constants2.hasOwnProperty("O_SYMLINK") && process.version.match(/^v0\.6\.[0-2]|^v0\.5\./)) {
-      patchLchmod(fs2);
-    }
-    if (!fs2.lutimes) {
-      patchLutimes(fs2);
-    }
-    fs2.chown = chownFix(fs2.chown);
-    fs2.fchown = chownFix(fs2.fchown);
-    fs2.lchown = chownFix(fs2.lchown);
-    fs2.chmod = chmodFix(fs2.chmod);
-    fs2.fchmod = chmodFix(fs2.fchmod);
-    fs2.lchmod = chmodFix(fs2.lchmod);
-    fs2.chownSync = chownFixSync(fs2.chownSync);
-    fs2.fchownSync = chownFixSync(fs2.fchownSync);
-    fs2.lchownSync = chownFixSync(fs2.lchownSync);
-    fs2.chmodSync = chmodFixSync(fs2.chmodSync);
-    fs2.fchmodSync = chmodFixSync(fs2.fchmodSync);
-    fs2.lchmodSync = chmodFixSync(fs2.lchmodSync);
-    fs2.stat = statFix(fs2.stat);
-    fs2.fstat = statFix(fs2.fstat);
-    fs2.lstat = statFix(fs2.lstat);
-    fs2.statSync = statFixSync(fs2.statSync);
-    fs2.fstatSync = statFixSync(fs2.fstatSync);
-    fs2.lstatSync = statFixSync(fs2.lstatSync);
-    if (fs2.chmod && !fs2.lchmod) {
-      fs2.lchmod = function(path2, mode, cb) {
-        if (cb) process.nextTick(cb);
-      };
-      fs2.lchmodSync = function() {
-      };
-    }
-    if (fs2.chown && !fs2.lchown) {
-      fs2.lchown = function(path2, uid, gid, cb) {
-        if (cb) process.nextTick(cb);
-      };
-      fs2.lchownSync = function() {
-      };
-    }
-    if (platform === "win32") {
-      fs2.rename = typeof fs2.rename !== "function" ? fs2.rename : function(fs$rename) {
-        function rename(from, to, cb) {
-          var start = Date.now();
-          var backoff = 0;
-          fs$rename(from, to, function CB(er) {
-            if (er && (er.code === "EACCES" || er.code === "EPERM" || er.code === "EBUSY") && Date.now() - start < 6e4) {
-              setTimeout(function() {
-                fs2.stat(to, function(stater, st) {
-                  if (stater && stater.code === "ENOENT")
-                    fs$rename(from, to, CB);
-                  else
-                    cb(er);
-                });
-              }, backoff);
-              if (backoff < 100)
-                backoff += 10;
-              return;
-            }
-            if (cb) cb(er);
-          });
-        }
-        if (Object.setPrototypeOf) Object.setPrototypeOf(rename, fs$rename);
-        return rename;
-      }(fs2.rename);
-    }
-    fs2.read = typeof fs2.read !== "function" ? fs2.read : function(fs$read) {
-      function read(fd, buffer, offset, length, position, callback_) {
-        var callback;
-        if (callback_ && typeof callback_ === "function") {
-          var eagCounter = 0;
-          callback = function(er, _, __) {
-            if (er && er.code === "EAGAIN" && eagCounter < 10) {
-              eagCounter++;
-              return fs$read.call(fs2, fd, buffer, offset, length, position, callback);
-            }
-            callback_.apply(this, arguments);
-          };
-        }
-        return fs$read.call(fs2, fd, buffer, offset, length, position, callback);
-      }
-      if (Object.setPrototypeOf) Object.setPrototypeOf(read, fs$read);
-      return read;
-    }(fs2.read);
-    fs2.readSync = typeof fs2.readSync !== "function" ? fs2.readSync : /* @__PURE__ */ function(fs$readSync) {
-      return function(fd, buffer, offset, length, position) {
-        var eagCounter = 0;
-        while (true) {
-          try {
-            return fs$readSync.call(fs2, fd, buffer, offset, length, position);
-          } catch (er) {
-            if (er.code === "EAGAIN" && eagCounter < 10) {
-              eagCounter++;
-              continue;
-            }
-            throw er;
-          }
-        }
-      };
-    }(fs2.readSync);
-    function patchLchmod(fs22) {
-      fs22.lchmod = function(path2, mode, callback) {
-        fs22.open(
-          path2,
-          constants2.O_WRONLY | constants2.O_SYMLINK,
-          mode,
-          function(err, fd) {
-            if (err) {
-              if (callback) callback(err);
-              return;
-            }
-            fs22.fchmod(fd, mode, function(err2) {
-              fs22.close(fd, function(err22) {
-                if (callback) callback(err2 || err22);
-              });
-            });
-          }
-        );
-      };
-      fs22.lchmodSync = function(path2, mode) {
-        var fd = fs22.openSync(path2, constants2.O_WRONLY | constants2.O_SYMLINK, mode);
-        var threw = true;
-        var ret;
-        try {
-          ret = fs22.fchmodSync(fd, mode);
-          threw = false;
-        } finally {
-          if (threw) {
-            try {
-              fs22.closeSync(fd);
-            } catch (er) {
-            }
-          } else {
-            fs22.closeSync(fd);
-          }
-        }
-        return ret;
-      };
-    }
-    function patchLutimes(fs22) {
-      if (constants2.hasOwnProperty("O_SYMLINK") && fs22.futimes) {
-        fs22.lutimes = function(path2, at, mt, cb) {
-          fs22.open(path2, constants2.O_SYMLINK, function(er, fd) {
-            if (er) {
-              if (cb) cb(er);
-              return;
-            }
-            fs22.futimes(fd, at, mt, function(er2) {
-              fs22.close(fd, function(er22) {
-                if (cb) cb(er2 || er22);
-              });
-            });
-          });
-        };
-        fs22.lutimesSync = function(path2, at, mt) {
-          var fd = fs22.openSync(path2, constants2.O_SYMLINK);
-          var ret;
-          var threw = true;
-          try {
-            ret = fs22.futimesSync(fd, at, mt);
-            threw = false;
-          } finally {
-            if (threw) {
-              try {
-                fs22.closeSync(fd);
-              } catch (er) {
-              }
-            } else {
-              fs22.closeSync(fd);
-            }
-          }
-          return ret;
-        };
-      } else if (fs22.futimes) {
-        fs22.lutimes = function(_a, _b, _c, cb) {
-          if (cb) process.nextTick(cb);
-        };
-        fs22.lutimesSync = function() {
-        };
-      }
-    }
-    function chmodFix(orig) {
-      if (!orig) return orig;
-      return function(target, mode, cb) {
-        return orig.call(fs2, target, mode, function(er) {
-          if (chownErOk(er)) er = null;
-          if (cb) cb.apply(this, arguments);
-        });
-      };
-    }
-    function chmodFixSync(orig) {
-      if (!orig) return orig;
-      return function(target, mode) {
-        try {
-          return orig.call(fs2, target, mode);
-        } catch (er) {
-          if (!chownErOk(er)) throw er;
-        }
-      };
-    }
-    function chownFix(orig) {
-      if (!orig) return orig;
-      return function(target, uid, gid, cb) {
-        return orig.call(fs2, target, uid, gid, function(er) {
-          if (chownErOk(er)) er = null;
-          if (cb) cb.apply(this, arguments);
-        });
-      };
-    }
-    function chownFixSync(orig) {
-      if (!orig) return orig;
-      return function(target, uid, gid) {
-        try {
-          return orig.call(fs2, target, uid, gid);
-        } catch (er) {
-          if (!chownErOk(er)) throw er;
-        }
-      };
-    }
-    function statFix(orig) {
-      if (!orig) return orig;
-      return function(target, options, cb) {
-        if (typeof options === "function") {
-          cb = options;
-          options = null;
-        }
-        function callback(er, stats) {
-          if (stats) {
-            if (stats.uid < 0) stats.uid += 4294967296;
-            if (stats.gid < 0) stats.gid += 4294967296;
-          }
-          if (cb) cb.apply(this, arguments);
-        }
-        return options ? orig.call(fs2, target, options, callback) : orig.call(fs2, target, callback);
-      };
-    }
-    function statFixSync(orig) {
-      if (!orig) return orig;
-      return function(target, options) {
-        var stats = options ? orig.call(fs2, target, options) : orig.call(fs2, target);
-        if (stats) {
-          if (stats.uid < 0) stats.uid += 4294967296;
-          if (stats.gid < 0) stats.gid += 4294967296;
-        }
-        return stats;
-      };
-    }
-    function chownErOk(er) {
-      if (!er)
-        return true;
-      if (er.code === "ENOSYS")
-        return true;
-      var nonroot = !process.getuid || process.getuid() !== 0;
-      if (nonroot) {
-        if (er.code === "EINVAL" || er.code === "EPERM")
-          return true;
-      }
-      return false;
-    }
-  }
-  return polyfills;
-}
-var legacyStreams;
-var hasRequiredLegacyStreams;
-function requireLegacyStreams() {
-  if (hasRequiredLegacyStreams) return legacyStreams;
-  hasRequiredLegacyStreams = 1;
-  var Stream = require$$0$2.Stream;
-  legacyStreams = legacy;
-  function legacy(fs2) {
-    return {
-      ReadStream,
-      WriteStream
-    };
-    function ReadStream(path2, options) {
-      if (!(this instanceof ReadStream)) return new ReadStream(path2, options);
-      Stream.call(this);
-      var self2 = this;
-      this.path = path2;
-      this.fd = null;
-      this.readable = true;
-      this.paused = false;
-      this.flags = "r";
-      this.mode = 438;
-      this.bufferSize = 64 * 1024;
-      options = options || {};
-      var keys = Object.keys(options);
-      for (var index = 0, length = keys.length; index < length; index++) {
-        var key = keys[index];
-        this[key] = options[key];
-      }
-      if (this.encoding) this.setEncoding(this.encoding);
-      if (this.start !== void 0) {
-        if ("number" !== typeof this.start) {
-          throw TypeError("start must be a Number");
-        }
-        if (this.end === void 0) {
-          this.end = Infinity;
-        } else if ("number" !== typeof this.end) {
-          throw TypeError("end must be a Number");
-        }
-        if (this.start > this.end) {
-          throw new Error("start must be <= end");
-        }
-        this.pos = this.start;
-      }
-      if (this.fd !== null) {
-        process.nextTick(function() {
-          self2._read();
-        });
-        return;
-      }
-      fs2.open(this.path, this.flags, this.mode, function(err, fd) {
-        if (err) {
-          self2.emit("error", err);
-          self2.readable = false;
-          return;
-        }
-        self2.fd = fd;
-        self2.emit("open", fd);
-        self2._read();
-      });
-    }
-    function WriteStream(path2, options) {
-      if (!(this instanceof WriteStream)) return new WriteStream(path2, options);
-      Stream.call(this);
-      this.path = path2;
-      this.fd = null;
-      this.writable = true;
-      this.flags = "w";
-      this.encoding = "binary";
-      this.mode = 438;
-      this.bytesWritten = 0;
-      options = options || {};
-      var keys = Object.keys(options);
-      for (var index = 0, length = keys.length; index < length; index++) {
-        var key = keys[index];
-        this[key] = options[key];
-      }
-      if (this.start !== void 0) {
-        if ("number" !== typeof this.start) {
-          throw TypeError("start must be a Number");
-        }
-        if (this.start < 0) {
-          throw new Error("start must be >= zero");
-        }
-        this.pos = this.start;
-      }
-      this.busy = false;
-      this._queue = [];
-      if (this.fd === null) {
-        this._open = fs2.open;
-        this._queue.push([this._open, this.path, this.flags, this.mode, void 0]);
-        this.flush();
-      }
-    }
-  }
-  return legacyStreams;
-}
-var clone_1;
-var hasRequiredClone;
-function requireClone() {
-  if (hasRequiredClone) return clone_1;
-  hasRequiredClone = 1;
-  clone_1 = clone;
-  var getPrototypeOf = Object.getPrototypeOf || function(obj) {
-    return obj.__proto__;
-  };
-  function clone(obj) {
-    if (obj === null || typeof obj !== "object")
-      return obj;
-    if (obj instanceof Object)
-      var copy = { __proto__: getPrototypeOf(obj) };
-    else
-      var copy = /* @__PURE__ */ Object.create(null);
-    Object.getOwnPropertyNames(obj).forEach(function(key) {
-      Object.defineProperty(copy, key, Object.getOwnPropertyDescriptor(obj, key));
-    });
-    return copy;
-  }
-  return clone_1;
-}
-var gracefulFs;
-var hasRequiredGracefulFs;
-function requireGracefulFs() {
-  if (hasRequiredGracefulFs) return gracefulFs;
-  hasRequiredGracefulFs = 1;
-  var fs2 = require$$1$1;
-  var polyfills2 = requirePolyfills();
-  var legacy = requireLegacyStreams();
-  var clone = requireClone();
-  var util2 = require$$4$1;
-  var gracefulQueue;
-  var previousSymbol;
-  if (typeof Symbol === "function" && typeof Symbol.for === "function") {
-    gracefulQueue = Symbol.for("graceful-fs.queue");
-    previousSymbol = Symbol.for("graceful-fs.previous");
-  } else {
-    gracefulQueue = "___graceful-fs.queue";
-    previousSymbol = "___graceful-fs.previous";
-  }
-  function noop() {
-  }
-  function publishQueue(context, queue2) {
-    Object.defineProperty(context, gracefulQueue, {
-      get: function() {
-        return queue2;
-      }
-    });
-  }
-  var debug2 = noop;
-  if (util2.debuglog)
-    debug2 = util2.debuglog("gfs4");
-  else if (/\bgfs4\b/i.test(process.env.NODE_DEBUG || ""))
-    debug2 = function() {
-      var m = util2.format.apply(util2, arguments);
-      m = "GFS4: " + m.split(/\n/).join("\nGFS4: ");
-      console.error(m);
-    };
-  if (!fs2[gracefulQueue]) {
-    var queue = commonjsGlobal[gracefulQueue] || [];
-    publishQueue(fs2, queue);
-    fs2.close = function(fs$close) {
-      function close(fd, cb) {
-        return fs$close.call(fs2, fd, function(err) {
-          if (!err) {
-            resetQueue();
-          }
-          if (typeof cb === "function")
-            cb.apply(this, arguments);
-        });
-      }
-      Object.defineProperty(close, previousSymbol, {
-        value: fs$close
-      });
-      return close;
-    }(fs2.close);
-    fs2.closeSync = function(fs$closeSync) {
-      function closeSync(fd) {
-        fs$closeSync.apply(fs2, arguments);
-        resetQueue();
-      }
-      Object.defineProperty(closeSync, previousSymbol, {
-        value: fs$closeSync
-      });
-      return closeSync;
-    }(fs2.closeSync);
-    if (/\bgfs4\b/i.test(process.env.NODE_DEBUG || "")) {
-      process.on("exit", function() {
-        debug2(fs2[gracefulQueue]);
-        require$$5$1.equal(fs2[gracefulQueue].length, 0);
-      });
-    }
-  }
-  if (!commonjsGlobal[gracefulQueue]) {
-    publishQueue(commonjsGlobal, fs2[gracefulQueue]);
-  }
-  gracefulFs = patch2(clone(fs2));
-  if (process.env.TEST_GRACEFUL_FS_GLOBAL_PATCH && !fs2.__patched) {
-    gracefulFs = patch2(fs2);
-    fs2.__patched = true;
-  }
-  function patch2(fs22) {
-    polyfills2(fs22);
-    fs22.gracefulify = patch2;
-    fs22.createReadStream = createReadStream;
-    fs22.createWriteStream = createWriteStream;
-    var fs$readFile = fs22.readFile;
-    fs22.readFile = readFile2;
-    function readFile2(path2, options, cb) {
-      if (typeof options === "function")
-        cb = options, options = null;
-      return go$readFile(path2, options, cb);
-      function go$readFile(path22, options2, cb2, startTime) {
-        return fs$readFile(path22, options2, function(err) {
-          if (err && (err.code === "EMFILE" || err.code === "ENFILE"))
-            enqueue([go$readFile, [path22, options2, cb2], err, startTime || Date.now(), Date.now()]);
-          else {
-            if (typeof cb2 === "function")
-              cb2.apply(this, arguments);
-          }
-        });
-      }
-    }
-    var fs$writeFile = fs22.writeFile;
-    fs22.writeFile = writeFile2;
-    function writeFile2(path2, data, options, cb) {
-      if (typeof options === "function")
-        cb = options, options = null;
-      return go$writeFile(path2, data, options, cb);
-      function go$writeFile(path22, data2, options2, cb2, startTime) {
-        return fs$writeFile(path22, data2, options2, function(err) {
-          if (err && (err.code === "EMFILE" || err.code === "ENFILE"))
-            enqueue([go$writeFile, [path22, data2, options2, cb2], err, startTime || Date.now(), Date.now()]);
-          else {
-            if (typeof cb2 === "function")
-              cb2.apply(this, arguments);
-          }
-        });
-      }
-    }
-    var fs$appendFile = fs22.appendFile;
-    if (fs$appendFile)
-      fs22.appendFile = appendFile;
-    function appendFile(path2, data, options, cb) {
-      if (typeof options === "function")
-        cb = options, options = null;
-      return go$appendFile(path2, data, options, cb);
-      function go$appendFile(path22, data2, options2, cb2, startTime) {
-        return fs$appendFile(path22, data2, options2, function(err) {
-          if (err && (err.code === "EMFILE" || err.code === "ENFILE"))
-            enqueue([go$appendFile, [path22, data2, options2, cb2], err, startTime || Date.now(), Date.now()]);
-          else {
-            if (typeof cb2 === "function")
-              cb2.apply(this, arguments);
-          }
-        });
-      }
-    }
-    var fs$copyFile = fs22.copyFile;
-    if (fs$copyFile)
-      fs22.copyFile = copyFile;
-    function copyFile(src, dest, flags, cb) {
-      if (typeof flags === "function") {
-        cb = flags;
-        flags = 0;
-      }
-      return go$copyFile(src, dest, flags, cb);
-      function go$copyFile(src2, dest2, flags2, cb2, startTime) {
-        return fs$copyFile(src2, dest2, flags2, function(err) {
-          if (err && (err.code === "EMFILE" || err.code === "ENFILE"))
-            enqueue([go$copyFile, [src2, dest2, flags2, cb2], err, startTime || Date.now(), Date.now()]);
-          else {
-            if (typeof cb2 === "function")
-              cb2.apply(this, arguments);
-          }
-        });
-      }
-    }
-    var fs$readdir = fs22.readdir;
-    fs22.readdir = readdir;
-    var noReaddirOptionVersions = /^v[0-5]\./;
-    function readdir(path2, options, cb) {
-      if (typeof options === "function")
-        cb = options, options = null;
-      var go$readdir = noReaddirOptionVersions.test(process.version) ? function go$readdir2(path22, options2, cb2, startTime) {
-        return fs$readdir(path22, fs$readdirCallback(
-          path22,
-          options2,
-          cb2,
-          startTime
-        ));
-      } : function go$readdir2(path22, options2, cb2, startTime) {
-        return fs$readdir(path22, options2, fs$readdirCallback(
-          path22,
-          options2,
-          cb2,
-          startTime
-        ));
-      };
-      return go$readdir(path2, options, cb);
-      function fs$readdirCallback(path22, options2, cb2, startTime) {
-        return function(err, files) {
-          if (err && (err.code === "EMFILE" || err.code === "ENFILE"))
-            enqueue([
-              go$readdir,
-              [path22, options2, cb2],
-              err,
-              startTime || Date.now(),
-              Date.now()
-            ]);
-          else {
-            if (files && files.sort)
-              files.sort();
-            if (typeof cb2 === "function")
-              cb2.call(this, err, files);
-          }
-        };
-      }
-    }
-    if (process.version.substr(0, 4) === "v0.8") {
-      var legStreams = legacy(fs22);
-      ReadStream = legStreams.ReadStream;
-      WriteStream = legStreams.WriteStream;
-    }
-    var fs$ReadStream = fs22.ReadStream;
-    if (fs$ReadStream) {
-      ReadStream.prototype = Object.create(fs$ReadStream.prototype);
-      ReadStream.prototype.open = ReadStream$open;
-    }
-    var fs$WriteStream = fs22.WriteStream;
-    if (fs$WriteStream) {
-      WriteStream.prototype = Object.create(fs$WriteStream.prototype);
-      WriteStream.prototype.open = WriteStream$open;
-    }
-    Object.defineProperty(fs22, "ReadStream", {
-      get: function() {
-        return ReadStream;
-      },
-      set: function(val) {
-        ReadStream = val;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(fs22, "WriteStream", {
-      get: function() {
-        return WriteStream;
-      },
-      set: function(val) {
-        WriteStream = val;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    var FileReadStream = ReadStream;
-    Object.defineProperty(fs22, "FileReadStream", {
-      get: function() {
-        return FileReadStream;
-      },
-      set: function(val) {
-        FileReadStream = val;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    var FileWriteStream = WriteStream;
-    Object.defineProperty(fs22, "FileWriteStream", {
-      get: function() {
-        return FileWriteStream;
-      },
-      set: function(val) {
-        FileWriteStream = val;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    function ReadStream(path2, options) {
-      if (this instanceof ReadStream)
-        return fs$ReadStream.apply(this, arguments), this;
-      else
-        return ReadStream.apply(Object.create(ReadStream.prototype), arguments);
-    }
-    function ReadStream$open() {
-      var that = this;
-      open(that.path, that.flags, that.mode, function(err, fd) {
-        if (err) {
-          if (that.autoClose)
-            that.destroy();
-          that.emit("error", err);
-        } else {
-          that.fd = fd;
-          that.emit("open", fd);
-          that.read();
-        }
-      });
-    }
-    function WriteStream(path2, options) {
-      if (this instanceof WriteStream)
-        return fs$WriteStream.apply(this, arguments), this;
-      else
-        return WriteStream.apply(Object.create(WriteStream.prototype), arguments);
-    }
-    function WriteStream$open() {
-      var that = this;
-      open(that.path, that.flags, that.mode, function(err, fd) {
-        if (err) {
-          that.destroy();
-          that.emit("error", err);
-        } else {
-          that.fd = fd;
-          that.emit("open", fd);
-        }
-      });
-    }
-    function createReadStream(path2, options) {
-      return new fs22.ReadStream(path2, options);
-    }
-    function createWriteStream(path2, options) {
-      return new fs22.WriteStream(path2, options);
-    }
-    var fs$open = fs22.open;
-    fs22.open = open;
-    function open(path2, flags, mode, cb) {
-      if (typeof mode === "function")
-        cb = mode, mode = null;
-      return go$open(path2, flags, mode, cb);
-      function go$open(path22, flags2, mode2, cb2, startTime) {
-        return fs$open(path22, flags2, mode2, function(err, fd) {
-          if (err && (err.code === "EMFILE" || err.code === "ENFILE"))
-            enqueue([go$open, [path22, flags2, mode2, cb2], err, startTime || Date.now(), Date.now()]);
-          else {
-            if (typeof cb2 === "function")
-              cb2.apply(this, arguments);
-          }
-        });
-      }
-    }
-    return fs22;
-  }
-  function enqueue(elem) {
-    debug2("ENQUEUE", elem[0].name, elem[1]);
-    fs2[gracefulQueue].push(elem);
-    retry();
-  }
-  var retryTimer;
-  function resetQueue() {
-    var now = Date.now();
-    for (var i = 0; i < fs2[gracefulQueue].length; ++i) {
-      if (fs2[gracefulQueue][i].length > 2) {
-        fs2[gracefulQueue][i][3] = now;
-        fs2[gracefulQueue][i][4] = now;
-      }
-    }
-    retry();
-  }
-  function retry() {
-    clearTimeout(retryTimer);
-    retryTimer = void 0;
-    if (fs2[gracefulQueue].length === 0)
-      return;
-    var elem = fs2[gracefulQueue].shift();
-    var fn = elem[0];
-    var args = elem[1];
-    var err = elem[2];
-    var startTime = elem[3];
-    var lastTime = elem[4];
-    if (startTime === void 0) {
-      debug2("RETRY", fn.name, args);
-      fn.apply(null, args);
-    } else if (Date.now() - startTime >= 6e4) {
-      debug2("TIMEOUT", fn.name, args);
-      var cb = args.pop();
-      if (typeof cb === "function")
-        cb.call(null, err);
-    } else {
-      var sinceAttempt = Date.now() - lastTime;
-      var sinceStart = Math.max(lastTime - startTime, 1);
-      var desiredDelay = Math.min(sinceStart * 1.2, 100);
-      if (sinceAttempt >= desiredDelay) {
-        debug2("RETRY", fn.name, args);
-        fn.apply(null, args.concat([startTime]));
-      } else {
-        fs2[gracefulQueue].push(elem);
-      }
-    }
-    if (retryTimer === void 0) {
-      retryTimer = setTimeout(retry, 0);
-    }
-  }
-  return gracefulFs;
-}
-var _fs;
-try {
-  _fs = requireGracefulFs();
-} catch (_) {
-  _fs = require$$1$1;
-}
-function readFile(file, options, callback) {
-  if (callback == null) {
-    callback = options;
-    options = {};
-  }
-  if (typeof options === "string") {
-    options = { encoding: options };
-  }
-  options = options || {};
-  var fs2 = options.fs || _fs;
-  var shouldThrow = true;
-  if ("throws" in options) {
-    shouldThrow = options.throws;
-  }
-  fs2.readFile(file, options, function(err, data) {
-    if (err) return callback(err);
-    data = stripBom(data);
-    var obj;
-    try {
-      obj = JSON.parse(data, options ? options.reviver : null);
-    } catch (err2) {
-      if (shouldThrow) {
-        err2.message = file + ": " + err2.message;
-        return callback(err2);
-      } else {
-        return callback(null, null);
-      }
-    }
-    callback(null, obj);
-  });
-}
-function readFileSync(file, options) {
-  options = options || {};
-  if (typeof options === "string") {
-    options = { encoding: options };
-  }
-  var fs2 = options.fs || _fs;
-  var shouldThrow = true;
-  if ("throws" in options) {
-    shouldThrow = options.throws;
-  }
-  try {
-    var content2 = fs2.readFileSync(file, options);
-    content2 = stripBom(content2);
-    return JSON.parse(content2, options.reviver);
-  } catch (err) {
-    if (shouldThrow) {
-      err.message = file + ": " + err.message;
-      throw err;
-    } else {
-      return null;
-    }
-  }
-}
-function stringify(obj, options) {
-  var spaces;
-  var EOL = "\n";
-  if (typeof options === "object" && options !== null) {
-    if (options.spaces) {
-      spaces = options.spaces;
-    }
-    if (options.EOL) {
-      EOL = options.EOL;
-    }
-  }
-  var str = JSON.stringify(obj, options ? options.replacer : null, spaces);
-  return str.replace(/\n/g, EOL) + EOL;
-}
-function writeFile(file, obj, options, callback) {
-  if (callback == null) {
-    callback = options;
-    options = {};
-  }
-  options = options || {};
-  var fs2 = options.fs || _fs;
-  var str = "";
-  try {
-    str = stringify(obj, options);
-  } catch (err) {
-    if (callback) callback(err, null);
-    return;
-  }
-  fs2.writeFile(file, str, options, callback);
-}
-function writeFileSync(file, obj, options) {
-  options = options || {};
-  var fs2 = options.fs || _fs;
-  var str = stringify(obj, options);
-  return fs2.writeFileSync(file, str, options);
-}
-function stripBom(content2) {
-  if (Buffer.isBuffer(content2)) content2 = content2.toString("utf8");
-  content2 = content2.replace(/^\uFEFF/, "");
-  return content2;
-}
-var jsonfile$1 = {
-  readFile,
-  readFileSync,
-  writeFile,
-  writeFileSync
-};
-var jsonfile_1 = jsonfile$1;
-var path$1 = require$$0$3;
-var fs = require$$1$1;
-var _0777 = parseInt("0777", 8);
-var mkdirp$1 = mkdirP.mkdirp = mkdirP.mkdirP = mkdirP;
-function mkdirP(p, opts, f, made) {
-  if (typeof opts === "function") {
-    f = opts;
-    opts = {};
-  } else if (!opts || typeof opts !== "object") {
-    opts = { mode: opts };
-  }
-  var mode = opts.mode;
-  var xfs = opts.fs || fs;
-  if (mode === void 0) {
-    mode = _0777;
-  }
-  if (!made) made = null;
-  var cb = f || /* istanbul ignore next */
-  function() {
-  };
-  p = path$1.resolve(p);
-  xfs.mkdir(p, mode, function(er) {
-    if (!er) {
-      made = made || p;
-      return cb(null, made);
-    }
-    switch (er.code) {
-      case "ENOENT":
-        if (path$1.dirname(p) === p) return cb(er);
-        mkdirP(path$1.dirname(p), opts, function(er2, made2) {
-          if (er2) cb(er2, made2);
-          else mkdirP(p, opts, cb, made2);
-        });
-        break;
-      default:
-        xfs.stat(p, function(er2, stat) {
-          if (er2 || !stat.isDirectory()) cb(er, made);
-          else cb(null, made);
-        });
-        break;
-    }
-  });
-}
-mkdirP.sync = function sync(p, opts, made) {
-  if (!opts || typeof opts !== "object") {
-    opts = { mode: opts };
-  }
-  var mode = opts.mode;
-  var xfs = opts.fs || fs;
-  if (mode === void 0) {
-    mode = _0777;
-  }
-  if (!made) made = null;
-  p = path$1.resolve(p);
-  try {
-    xfs.mkdirSync(p, mode);
-    made = made || p;
-  } catch (err0) {
-    switch (err0.code) {
-      case "ENOENT":
-        made = sync(path$1.dirname(p), opts, made);
-        sync(p, opts, made);
-        break;
-      default:
-        var stat;
-        try {
-          stat = xfs.statSync(p);
-        } catch (err1) {
-          throw err0;
-        }
-        if (!stat.isDirectory()) throw err0;
-        break;
-    }
-  }
-  return made;
-};
-const path = require$$0$3;
-const electron = electron$1;
-const jsonfile = jsonfile_1;
-const mkdirp = mkdirp$1;
-var electronWindowState = function(options) {
-  const app2 = electron.app || electron.remote.app;
-  const screen = electron.screen || electron.remote.screen;
-  let state;
-  let winRef;
-  let stateChangeTimer;
-  const eventHandlingDelay = 100;
-  const config = Object.assign({
-    file: "window-state.json",
-    path: app2.getPath("userData"),
-    maximize: true,
-    fullScreen: true
-  }, options);
-  const fullStoreFileName = path.join(config.path, config.file);
-  function isNormal(win2) {
-    return !win2.isMaximized() && !win2.isMinimized() && !win2.isFullScreen();
-  }
-  function hasBounds() {
-    return state && Number.isInteger(state.x) && Number.isInteger(state.y) && Number.isInteger(state.width) && state.width > 0 && Number.isInteger(state.height) && state.height > 0;
-  }
-  function resetStateToDefault() {
-    const displayBounds = screen.getPrimaryDisplay().bounds;
-    state = {
-      width: config.defaultWidth || 800,
-      height: config.defaultHeight || 600,
-      x: 0,
-      y: 0,
-      displayBounds
-    };
-  }
-  function windowWithinBounds(bounds) {
-    return state.x >= bounds.x && state.y >= bounds.y && state.x + state.width <= bounds.x + bounds.width && state.y + state.height <= bounds.y + bounds.height;
-  }
-  function ensureWindowVisibleOnSomeDisplay() {
-    const visible = screen.getAllDisplays().some((display) => {
-      return windowWithinBounds(display.bounds);
-    });
-    if (!visible) {
-      return resetStateToDefault();
-    }
-  }
-  function validateState() {
-    const isValid = state && (hasBounds() || state.isMaximized || state.isFullScreen);
-    if (!isValid) {
-      state = null;
-      return;
-    }
-    if (hasBounds() && state.displayBounds) {
-      ensureWindowVisibleOnSomeDisplay();
-    }
-  }
-  function updateState(win2) {
-    win2 = win2 || winRef;
-    if (!win2) {
-      return;
-    }
-    try {
-      const winBounds = win2.getBounds();
-      if (isNormal(win2)) {
-        state.x = winBounds.x;
-        state.y = winBounds.y;
-        state.width = winBounds.width;
-        state.height = winBounds.height;
-      }
-      state.isMaximized = win2.isMaximized();
-      state.isFullScreen = win2.isFullScreen();
-      state.displayBounds = screen.getDisplayMatching(winBounds).bounds;
-    } catch (err) {
-    }
-  }
-  function saveState(win2) {
-    if (win2) {
-      updateState(win2);
-    }
-    try {
-      mkdirp.sync(path.dirname(fullStoreFileName));
-      jsonfile.writeFileSync(fullStoreFileName, state);
-    } catch (err) {
-    }
-  }
-  function stateChangeHandler() {
-    clearTimeout(stateChangeTimer);
-    stateChangeTimer = setTimeout(updateState, eventHandlingDelay);
-  }
-  function closeHandler() {
-    updateState();
-  }
-  function closedHandler() {
-    unmanage();
-    saveState();
-  }
-  function manage(win2) {
-    if (config.maximize && state.isMaximized) {
-      win2.maximize();
-    }
-    if (config.fullScreen && state.isFullScreen) {
-      win2.setFullScreen(true);
-    }
-    win2.on("resize", stateChangeHandler);
-    win2.on("move", stateChangeHandler);
-    win2.on("close", closeHandler);
-    win2.on("closed", closedHandler);
-    winRef = win2;
-  }
-  function unmanage() {
-    if (winRef) {
-      winRef.removeListener("resize", stateChangeHandler);
-      winRef.removeListener("move", stateChangeHandler);
-      clearTimeout(stateChangeTimer);
-      winRef.removeListener("close", closeHandler);
-      winRef.removeListener("closed", closedHandler);
-      winRef = null;
-    }
-  }
-  try {
-    state = jsonfile.readFileSync(fullStoreFileName);
-  } catch (err) {
-  }
-  validateState();
-  state = Object.assign({
-    width: config.defaultWidth || 800,
-    height: config.defaultHeight || 600
-  }, state);
-  return {
-    get x() {
-      return state.x;
-    },
-    get y() {
-      return state.y;
-    },
-    get width() {
-      return state.width;
-    },
-    get height() {
-      return state.height;
-    },
-    get displayBounds() {
-      return state.displayBounds;
-    },
-    get isMaximized() {
-      return state.isMaximized;
-    },
-    get isFullScreen() {
-      return state.isFullScreen;
-    },
-    saveState,
-    unmanage,
-    manage,
-    resetStateToDefault
-  };
-};
-const windowStateKeeper = /* @__PURE__ */ getDefaultExportFromCjs(electronWindowState);
-let win, tray, mainWindowState;
+let win, tray;
 const store = new ElectronStore();
 function createTray() {
   tray = new Tray("build/tray.png");
@@ -16439,9 +15314,29 @@ function windowsCount() {
     return b.isVisible();
   }).length;
 }
+function getMainWindowState() {
+  let mainWindowState = store.get();
+  if (!mainWindowState) {
+    mainWindowState = {};
+  }
+  if (!store.has("width")) {
+    mainWindowState.width = 1280;
+  }
+  if (!store.has("height")) {
+    mainWindowState.height = 800;
+  }
+  if (!store.has("isFullScreen")) {
+    mainWindowState.isFullScreen = false;
+  }
+  if (!store.has("isMaximized")) {
+    mainWindowState.isMaximized = false;
+  }
+  return mainWindowState;
+}
 function createPrivateWindow() {
   let private_session = session.fromPartition("private");
   let windows_count = windowsCount();
+  const mainWindowState = getMainWindowState();
   let private_win = new BrowserWindow({
     show: false,
     backgroundColor: "#04060c",
@@ -16476,6 +15371,8 @@ function createPrivateWindow() {
 }
 function createWindow() {
   let windows_count = windowsCount();
+  console.log(getMainWindowState());
+  const winState = getMainWindowState();
   win = new BrowserWindow({
     show: false,
     backgroundColor: "#04060c",
@@ -16486,13 +15383,32 @@ function createWindow() {
       devTools: !app.isPackaged
     },
     darkTheme: true,
-    x: mainWindowState.x + 64 * (windows_count - 1),
-    y: mainWindowState.y + 64 * (windows_count - 1),
-    width: mainWindowState.width,
-    height: mainWindowState.height
+    x: winState.x + 64 * windows_count,
+    y: winState.y + 64 * windows_count,
+    width: winState.width,
+    height: winState.height
   });
   if (windows_count === 0) {
-    mainWindowState.manage(win);
+    win.on("maximize", () => {
+      store.set("isMaximized", true);
+    });
+    win.on("unmaximize", () => {
+      store.set("isMaximized", false);
+    });
+    win.on("resize", () => {
+      store.set("width", win.getSize()[0]);
+      store.set("height", win.getSize()[1]);
+    });
+    win.on("move", () => {
+      store.set("x", win.getPosition()[0]);
+      store.set("y", win.getPosition()[1]);
+    });
+    if (winState.isMaximized) {
+      win.maximize();
+    }
+    if (winState.isFullScreen) {
+      win.setFullScreen(true);
+    }
   }
   win.loadURL("https://bolls.life", {
     userAgent: "'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0'"
@@ -16506,17 +15422,14 @@ function createWindow() {
   });
   win.on("enter-full-screen", () => {
     win.setAutoHideMenuBar(true);
+    if (windows_count === 0) store.set("isFullScreen", true);
   });
   win.on("leave-full-screen", () => {
     win.setAutoHideMenuBar(false);
+    if (windows_count === 0) store.set("isFullScreen", false);
   });
 }
 app.whenReady().then(() => {
-  mainWindowState = windowStateKeeper({
-    defaultWidth: 1e3,
-    defaultHeight: 800,
-    fullScreen: true
-  });
   createWindow();
   createTray();
   const didClear = store.get("didClear");

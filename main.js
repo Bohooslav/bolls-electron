@@ -1,8 +1,7 @@
 import { app, BrowserWindow, shell, Menu, session, Tray } from "electron";
 import Store from "electron-store";
-import windowStateKeeper from "electron-window-state";
 
-let win, tray, mainWindowState;
+let win, tray;
 
 const store = new Store();
 
@@ -63,11 +62,41 @@ function windowsCount() {
     return b.isVisible();
   }).length;
 }
+/**
+ * Returns saved window state
+ * sets default values if not saved
+ * @returns {Object} mainWindowState
+ */
+function getMainWindowState() {
+  let mainWindowState = store.get();
+  if (!mainWindowState) {
+    mainWindowState = {};
+  }
+
+  if (!store.has("width")) {
+    mainWindowState.width = 1280;
+  }
+
+  if (!store.has("height")) {
+    mainWindowState.height = 800;
+  }
+
+  if (!store.has("isFullScreen")) {
+    mainWindowState.isFullScreen = false;
+  }
+
+  if (!store.has("isMaximized")) {
+    mainWindowState.isMaximized = false;
+  }
+
+  return mainWindowState;
+}
 
 function createPrivateWindow() {
   let private_session = session.fromPartition("private");
 
   let windows_count = windowsCount();
+  const mainWindowState = getMainWindowState();
 
   // Create the browser window.
   let private_win = new BrowserWindow({
@@ -109,6 +138,8 @@ function createPrivateWindow() {
 function createWindow() {
   // Used to offset every new window to avoid overlaping with existing windows
   let windows_count = windowsCount();
+  console.log(getMainWindowState());
+  const winState = getMainWindowState();
 
   // Create the browser window.
   win = new BrowserWindow({
@@ -121,18 +152,39 @@ function createWindow() {
       devTools: !app.isPackaged,
     },
     darkTheme: true,
-    x: mainWindowState.x + 64 * (windows_count - 1),
-    y: mainWindowState.y + 64 * (windows_count - 1),
-    width: mainWindowState.width,
-    height: mainWindowState.height,
+    x: winState.x + 64 * windows_count,
+    y: winState.y + 64 * windows_count,
+    width: winState.width,
+    height: winState.height,
   });
 
-  // Let us register listeners on the window, so we can update the state
+  // Register listeners on the window to update the state
   // automatically (the listeners will be removed when the window is closed)
-  // and restore the maximized or full screen state#
+  // and restore the maximized or full screen state
   if (windows_count === 0) {
     // Manage only main window
-    mainWindowState.manage(win);
+    win.on("maximize", () => {
+      store.set("isMaximized", true);
+    });
+    win.on("unmaximize", () => {
+      store.set("isMaximized", false);
+    });
+    win.on("resize", () => {
+      store.set("width", win.getSize()[0]);
+      store.set("height", win.getSize()[1]);
+    });
+    win.on("move", () => {
+      store.set("x", win.getPosition()[0]);
+      store.set("y", win.getPosition()[1]);
+    });
+
+    if (winState.isMaximized) {
+      win.maximize();
+    }
+
+    if (winState.isFullScreen) {
+      win.setFullScreen(true);
+    }
   }
 
   // win.webContents.openDevTools()
@@ -141,7 +193,6 @@ function createWindow() {
     userAgent:
       "'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0'",
   });
-  // win.setMenuBarVisibility(false)
   win.once("ready-to-show", () => {
     win.show();
   });
@@ -152,18 +203,15 @@ function createWindow() {
 
   win.on("enter-full-screen", () => {
     win.setAutoHideMenuBar(true);
+    if (windows_count === 0) store.set("isFullScreen", true);
   });
   win.on("leave-full-screen", () => {
     win.setAutoHideMenuBar(false);
+    if (windows_count === 0) store.set("isFullScreen", false);
   });
 }
 
 app.whenReady().then(() => {
-  mainWindowState = windowStateKeeper({
-    defaultWidth: 1000,
-    defaultHeight: 800,
-    fullScreen: true,
-  });
   createWindow();
   createTray();
   // I need to clean up all service workers and cache only once

@@ -20,8 +20,7 @@
   "author": "Bohooslav <bpavlisinec@gmail.com>",
   "description": "Read the Bible with full emphasis on the God`s Word only. Sola scriptura. Read God`s Word with a deep understanding of His design. Bible elevates your soul with rapid ascension to calm, safety and more.",
   "dependencies": {
-    "electron-store": "^10.0.0",
-    "electron-window-state": "^5.0.3"
+    "electron-store": "^10.0.0"
   },
   "devDependencies": {
     "electron": "^31.4.0",
